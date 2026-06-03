@@ -1,7 +1,12 @@
 import os
 from flask import Flask, render_template, request, jsonify
 from detector import analyze_email
+import google.generativeai as genai
 
+
+# Explicitly set the environment variable format helper
+api_key = os.environ.get("GEMINI_API_KEY", "").strip()
+genai.configure(api_key=api_key)
 app = Flask(__name__)
 
 @app.route("/")
