@@ -16,14 +16,14 @@ Scans emails for known phishing indicators:
 Uses Anthropic's Claude to deeply analyze email context,
 tone, and intent — providing a human-readable explanation.
 
-## 🛡️ Key Cybersecurity Concepts Demonstrated
+## Key Cybersecurity Concepts Demonstrated
 - Social engineering detection
 - Indicators of Compromise (IOCs)
 - Natural Language Processing for threat detection
 - k-anonymity principles
 - False positive vs false negative tradeoffs
 
-## 🚀 Tech Stack
+## Tech Stack
 - Python 3.11
 - Flask (web framework)
 - Anthropic Claude API (AI analysis)
@@ -54,5 +54,5 @@ tone, and intent — providing a human-readable explanation.
 <img width="1429" height="787" alt="Screenshot 2026-06-03 at 4 39 59 PM" src="https://github.com/user-attachments/assets/1775d2a4-c093-4383-95da-8ae1dfe78571" />
 
 
-## 👤 Author
+## Author
 Your Name — www.linkedin.com/in/richa-patel-2402
