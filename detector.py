@@ -1,37 +1,34 @@
 import os
-from flask import Flask, render_template, request, jsonify
 import google.generativeai as genai
 
-
-# Explicitly set the environment variable format helper
+# Configure the Gemini API client using your Render environment variable
 api_key = os.environ.get("GEMINI_API_KEY", "").strip()
 genai.configure(api_key=api_key)
-app = Flask(__name__)
 
-@app.route("/")
-def home():
-    # Serves the clean dark-theme dashboard UI
-    return render_template("index.html")
-
-@app.route("/analyze", methods=["POST"])
-def analyze():
+def analyze_email(email_text):
+    """
+    Analyzes the target email text payload using the Gemini Flash model
+    to detect deep social engineering and phishing threat signatures.
+    """
     try:
-        data = request.get_json()
-        if not data:
-            return jsonify({"error": "Invalid payload transmission context."}), 400
-            
-        email_text = data.get("email_text", "")
-        if not email_text.strip():
-            return jsonify({"error": "Please paste target email content before initiating scanning sequences."}), 400
-
-        # Pass target data down to your dual-engine pipeline
-        result = analyze_email(email_text)
-        return jsonify(result)
+        # Initialize the correct model
+        model = genai.GenerativeModel('gemini-1.5-flash')
         
+        prompt = f"""
+        Analyze the following email payload for phishing markers, urgent behavioral pressure, 
+        spoofing identifiers, or malicious intent. Provide a concise safety breakdown:
+        
+        Email Payload:
+        \"\"\"{email_text}\"\"\"
+        """
+        
+        response = model.generate_content(prompt)
+        
+        # Return the structure your frontend expects
+        return {
+            "analysis": response.text
+        }
     except Exception as e:
-        return jsonify({"error": f"Internal System Link Layer Failure: {str(e)}"}), 500
-
-if __name__ == "__main__":
-    # Standard production binding properties
-    port = int(os.environ.get("PORT", 8080))
-    app.run(host="0.0.0.0", port=port)
+        return {
+            "analysis": f"Deep Model Engine analysis failed: {str(e)}"
+        }
