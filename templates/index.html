@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Phishing Threat Detector</title>
+  <style>
+    /* ==========================================================================
+       1. MODERN DARK-THEME RESET & VARIABLES
+       ========================================================================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #0b0b14;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 40px 20px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* ==========================================================================
+       2. LAYOUT COMPONENTS (HEADER & CARDS)
+       ========================================================================== */
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
+    .card {
+      background: #131325;
+      border: 1px solid #232343;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    }
+
+    .card label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #94a3b8;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 160px;
+      background: #0b0b14;
+      border: 1px solid #2d2d54;
+      border-radius: 8px;
+      color: #f1f5f9;
+      padding: 14px;
+      font-size: 0.9rem;
+      resize: vertical;
+      font-family: inherit;
+      transition: border-color 0.15s ease;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #6366f1;
+    }
+
+    textarea:disabled {
+      background: #131325;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+
+    /* ==========================================================================
+       3. PROPORTIONAL COMPACT UI CONTROLS
+       ========================================================================== */
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #analyzeBtn {
+      background: #6366f1;
+      color: #ffffff;
+      flex: 2;
+    }
+
+    #analyzeBtn:hover:not(:disabled) {
+      background: #4f46e5;
+    }
+
+    #clearBtn {
+      background: #1e1e38;
+      border: 1px solid #2d2d54;
+      color: #94a3b8;
+      flex: 1;
+    }
+
+    #clearBtn:hover:not(:disabled) {
+      background: #2d2d54;
+      color: #f1f5f9;
+    }
+
+    button:disabled {
+      background: #1e1e2f !important;
+      color: #64748b !important;
+      border: 1px solid #23233b !important;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    /* ==========================================================================
+       4. HIGH-PERFORMANCE GRID & THREAT OUTPUTS
+       ========================================================================== */
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .results-grid .card {
+      margin-bottom: 0;
+    }
+
+    .results-grid h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 14px;
+      border-bottom: 1px solid #232343;
+      padding-bottom: 8px;
+    }
+
+    /* Threat Verdict Indicator Panels */
+    .verdict-banner {
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      border: 1px solid transparent;
+      margin-bottom: 20px;
+    }
+
+    .verdict-banner h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .verdict-banner p {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .verdict-banner.red { background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.3); color: #f87171; }
+    .verdict-banner.orange { background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.3); color: #fbbf24; }
+    .verdict-banner.green { background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.3); color: #34d399; }
+
+    /* Centered Score Meters */
+    .score-bar-container {
+      background: #0b0b14;
+      border-radius: 999px;
+      height: 8px;
+      max-width: 300px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    .score-bar {
+      height: 100%;
+      border-radius: 999px;
+      width: 0%;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .score-bar.red { background: #ef4444; }
+    .score-bar.orange { background: #f59e0b; }
+    .score-bar.green { background: #10b981; }
+
+    /* Dynamic Content Lists & Code Presets */
+    #reasonsList {
+      list-style: none;
+    }
+
+    #reasonsList li {
+      padding: 10px 0;
+      border-bottom: 1px solid #1e1e38;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+    }
+
+    #reasonsList li:last-child {
+      border-bottom: none;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      font-family: inherit;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+
+    /* Asynchronous States */
+    .hidden {
+      display: none !important;
+    }
+
+    #loading {
+      text-align: center;
+      padding: 32px;
+      color: #94a3b8;
+      font-size: 0.85rem;
+    }
+
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 2px solid #2d2d54;
+      border-top-color: #6366f1;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header class="header">
+      <h1>AI Phishing Threat Detector</h1>
+      <p>Analyze suspicious payload parameters using signature pattern matching and neural threat models.</p>
+    </header>
+
+    <main>
+      <section class="card">
+        <label for="emailInput"> Target Payload Context</label>
+        <textarea id="emailInput" placeholder="Paste the full email headers, sender profile parameters, or body strings here..."></textarea>
+        
+        <div class="button-group">
+          <button id="analyzeBtn" onclick="analyzeEmail()">
+            <span id="btnText">Analyze Email</span>
+          </button>
+          <button id="clearBtn" onclick="clearInput()">
+            Clear
+          </button>
+        </div>
+      </section>
+
+      <div id="loading" class="hidden" role="status">
+        <div class="spinner"></div>
+        <p>Evaluating syntax strings against security context configurations...</p>
+      </div>
+
+      <section id="results" class="hidden">
+        <div id="verdictBanner" class="verdict-banner">
+          <h2 id="verdictText"></h2>
+          <div class="score-bar-container">
+            <div id="scoreBar" class="score-bar"></div>
+          </div>
+          <p id="scoreText"></p>
+        </div>
+
+        <div class="results-grid">
+          <div class="card">
+            <h3>Heuristic Signal Metrics</h3>
+            <ul id="reasonsList"></ul>
+          </div>
+
+          <div class="card">
+            <h3>Deep Model Intelligence Analysis</h3>
+            <pre id="aiAnalysis"></pre>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    async function analyzeEmail() {
+      const emailInput = document.getElementById("emailInput");
+      const emailText = emailInput.value;
+      const btn = document.getElementById("analyzeBtn");
+      const btnText = document.getElementById("btnText");
+      const clearBtn = document.getElementById("clearBtn");
+
+      if (!emailText.trim()) {
+        alert("Please paste target email content before initiating scanning sequences.");
+        return;
+      }
+
+      // Lock interactive interfaces immediately
+      document.getElementById("loading").classList.remove("hidden");
+      document.getElementById("results").classList.add("hidden");
+      
+      btn.disabled = true;
+      clearBtn.disabled = true;
+      emailInput.disabled = true;
+      btnText.innerText = "⚡ Analyzing Threats...";
+
+      try {
+        const response = await fetch("/analyze", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email_text: emailText })
+        });
+
+        const data = await response.json();
+        document.getElementById("loading").classList.add("hidden");
+
+        if (data.error) {
+          alert(data.error);
+          resetFormState();
+          return;
+        }
+
+        // Render dynamic classification profiles
+        const banner = document.getElementById("verdictBanner");
+        banner.className = "verdict-banner " + data.risk_color;
+
+        const icons = { PHISHING: "🚨", SUSPICIOUS: "⚠️", SAFE: "✅" };
+        document.getElementById("verdictText").innerText = `${icons[data.risk_level] || "🛑"} System Classification: ${data.risk_level}`;
+
+        const scoreBar = document.getElementById("scoreBar");
+        scoreBar.className = "score-bar " + data.risk_color;
+        setTimeout(() => { scoreBar.style.width = data.score + "%"; }, 50);
+        
+        document.getElementById("scoreText").innerText = `Calculated Threat Score: ${data.score}/100`;
+
+        // Render explicit heuristic matches
+        const list = document.getElementById("reasonsList");
+        list.innerHTML = "";
+        if (data.rule_reasons.length === 0) {
+          list.innerHTML = "<li>✅ Zero explicit threat signatures matched by rule patterns.</li>";
+        } else {
+          data.rule_reasons.forEach(r => {
+            const li = document.createElement("li");
+            li.innerText = r;
+            list.appendChild(li);
+          });
+        }
+
+        document.getElementById("aiAnalysis").innerText = data.ai_analysis;
+        document.getElementById("results").classList.remove("hidden");
+        resetFormState();
+
+      } catch (err) {
+        document.getElementById("loading").classList.add("hidden");
+        alert("API link layer communication failure. Confirm runtime terminal execution states.");
+        resetFormState();
+      }
+    }
+
+    function resetFormState() {
+      document.getElementById("analyzeBtn").disabled = false;
+      document.getElementById("clearBtn").disabled = false;
+      document.getElementById("emailInput").disabled = false;
+      document.getElementById("btnText").innerText = "Analyze Email";
+    }
+
+    function clearInput() {
+      document.getElementById("emailInput").value = "";
+      document.getElementById("results").classList.add("hidden");
+      resetFormState();
+    }
+  </script>
+</body>
+</html>

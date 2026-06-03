@@ -1,0 +1,251 @@
+/* Modern Reset & Variable Baselines */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: #0b0b14;
+  color: #e2e8f0;
+  min-height: 100vh;
+  padding: 40px 20px;
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Compact, Clean Header */
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+
+.header p {
+  color: #94a3b8;
+  font-size: 0.95rem;
+}
+
+/* Sleek Dashboard Cards */
+.card {
+  background: #131325;
+  border: 1px solid #232343;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+.card label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Refined Textarea Layout */
+textarea {
+  width: 100%;
+  height: 160px;
+  background: #0b0b14;
+  border: 1px solid #2d2d54;
+  border-radius: 8px;
+  color: #f1f5f9;
+  padding: 12px;
+  font-size: 0.9rem;
+  resize: vertical;
+  font-family: inherit;
+  transition: border-color 0.15s ease;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #6366f1;
+}
+
+/* Compact, Proportional Button Controls */
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#analyzeBtn {
+  background: #6366f1;
+  color: #ffffff;
+}
+
+#analyzeBtn:hover:not(:disabled) {
+  background: #4f46e5;
+}
+
+#clearBtn {
+  background: #1e1e38;
+  border: 1px solid #2d2d54;
+  color: #94a3b8;
+}
+
+#clearBtn:hover:not(:disabled) {
+  background: #2d2d54;
+  color: #f1f5f9;
+}
+
+button:disabled {
+  background: #1e1e2f !important;
+  color: #64748b !important;
+  border: 1px solid #23233b !important;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Grid Layout for Faster Results Scanning */
+.results-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.results-grid .card {
+  margin-bottom: 0;
+  height: 100%;
+}
+
+.results-grid h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #232343;
+  padding-bottom: 8px;
+}
+
+/* Modern Compact Verdict Banner */
+.verdict-banner {
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid transparent;
+}
+
+.verdict-banner h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.verdict-banner p {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Threat Color Palettes */
+.verdict-banner.red { background: rgba(239, 68, 68, 0.07); border-color: rgba(239, 68, 68, 0.3); color: #f87171; }
+.verdict-banner.orange { background: rgba(245, 158, 11, 0.07); border-color: rgba(245, 158, 11, 0.3); color: #fbbf24; }
+.verdict-banner.green { background: rgba(16, 185, 129, 0.07); border-color: rgba(16, 185, 129, 0.3); color: #34d399; }
+
+/* Clean Minimalist Score Bars */
+.score-bar-container {
+  background: #1e1e38;
+  border-radius: 999px;
+  height: 8px;
+  max-width: 300px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.score-bar {
+  height: 100%;
+  border-radius: 999px;
+  width: 0%;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.score-bar.red { background: #ef4444; }
+.score-bar.orange { background: #f59e0b; }
+.score-bar.green { background: #10b981; }
+
+/* Component Lists & Code Renders */
+#reasonsList {
+  list-style: none;
+}
+
+#reasonsList li {
+  padding: 8px 0;
+  border-bottom: 1px solid #1e1e38;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+}
+
+#reasonsList li:last-child {
+  border-bottom: none;
+}
+
+pre {
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #cbd5e1;
+}
+
+/* Fast CSS Loading Animation */
+.hidden {
+  display: none !important;
+}
+
+#loading {
+  text-align: center;
+  padding: 24px;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 2px solid #2d2d54;
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin: 0 auto 12px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
