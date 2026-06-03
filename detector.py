@@ -1,6 +1,5 @@
 import os
 from flask import Flask, render_template, request, jsonify
-from detector import analyze_email
 import google.generativeai as genai
 
 
