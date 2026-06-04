@@ -377,44 +377,39 @@
         // Render explicit heuristic matches
         const list = document.getElementById("reasonsList");
         list.innerHTML = "";
-       if (data.rule_reasons.length === 0) {
-      const li = document.createElement("li");
-      li.innerText = "No immediate heuristic rule violations identified.";
-      list.appendChild(li);
-    } else {
-      data.rule_reasons.forEach(reason => {
-        const li = document.createElement("li");
-        li.innerText = reason;
-        list.appendChild(li);
-      });
+        if (data.rule_reasons.length === 0) {
+          list.innerHTML = "<li>✅ Zero explicit threat signatures matched by rule patterns.</li>";
+        } else {
+          data.rule_reasons.forEach(r => {
+            const li = document.createElement("li");
+            li.innerText = r;
+            list.appendChild(li);
+          });
+        }
+
+        document.getElementById("aiAnalysis").innerText = data.ai_analysis;
+        document.getElementById("results").classList.remove("hidden");
+        resetFormState();
+
+      } catch (err) {
+        document.getElementById("loading").classList.add("hidden");
+        alert("API link layer communication failure. Confirm runtime terminal execution states.");
+        resetFormState();
+      }
     }
 
-    // Push Gemini's text analysis into your Deep Model card
-    if (data.analysis) {
-      document.getElementById("aiAnalysis").innerText = data.analysis;
-    } else {
-      document.getElementById("aiAnalysis").innerText = "No deep intelligence signatures returned.";
+    function resetFormState() {
+      document.getElementById("analyzeBtn").disabled = false;
+      document.getElementById("clearBtn").disabled = false;
+      document.getElementById("emailInput").disabled = false;
+      document.getElementById("btnText").innerText = "Analyze Email";
     }
 
-    // Reveal the results panel and unlock the interface
-    document.getElementById("results").classList.remove("hidden");
-    btn.disabled = false;
-    clearBtn.disabled = false;
-    emailInput.disabled = false;
-    btnText.innerText = "Analyze Email";
-
-  } catch (error) {
-    alert("An error occurred during communication sequences with the core engine.");
-    console.error(error);
-    
-    // Safety fallback to restore your button state if the server fails
-    document.getElementById("loading").classList.add("hidden");
-    btn.disabled = false;
-    clearBtn.disabled = false;
-    emailInput.disabled = false;
-    btnText.innerText = "Analyze Email";
-  }
-}
-</script>
+    function clearInput() {
+      document.getElementById("emailInput").value = "";
+      document.getElementById("results").classList.add("hidden");
+      resetFormState();
+    }
+  </script>
 </body>
 </html>
