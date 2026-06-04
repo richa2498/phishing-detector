@@ -1,6 +1,6 @@
 import os
 import re
-from google import genai
+import google.genai as genai
 
 # ──────────────────────────────────────────
 # PART A: Rule-Based Scorer (No AI needed)
