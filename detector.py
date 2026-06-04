@@ -1,11 +1,10 @@
 import os
 import re
-from google.genai import genai
-from google.genai import types
+from google import genai
 
 
 # Only run this block for Gemini Developer API
-client = genai.Client(api_key='GEMINI_API_KEY')
+client = genai.Client()
 
 # ──────────────────────────────────────────
 # PART A: Rule-Based Scorer (No AI needed)
