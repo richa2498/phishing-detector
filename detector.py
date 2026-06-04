@@ -1,6 +1,6 @@
 import os
 import re
-from google import genai
+from google.genai import genai
 from google.genai import types
 
 
