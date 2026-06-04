@@ -377,7 +377,7 @@
         // Render explicit heuristic matches
         const list = document.getElementById("reasonsList");
         list.innerHTML = "";
-        if (data.rule_reasons.length === 0) {
+       if (data.rule_reasons.length === 0) {
       const li = document.createElement("li");
       li.innerText = "No immediate heuristic rule violations identified.";
       list.appendChild(li);
@@ -415,31 +415,6 @@
     btnText.innerText = "Analyze Email";
   }
 }
-
-
-        document.getElementById("aiAnalysis").innerText = data.ai_analysis;
-        document.getElementById("results").classList.remove("hidden");
-        resetFormState();
-
-      } catch (err) {
-        document.getElementById("loading").classList.add("hidden");
-        alert("API link layer communication failure. Confirm runtime terminal execution states.");
-        resetFormState();
-      }
-    }
-
-    function resetFormState() {
-      document.getElementById("analyzeBtn").disabled = false;
-      document.getElementById("clearBtn").disabled = false;
-      document.getElementById("emailInput").disabled = false;
-      document.getElementById("btnText").innerText = "Analyze Email";
-    }
-
-    function clearInput() {
-      document.getElementById("emailInput").value = "";
-      document.getElementById("results").classList.add("hidden");
-      resetFormState();
-    }
-  </script>
+</script>
 </body>
 </html>
