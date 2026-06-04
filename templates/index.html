@@ -378,14 +378,44 @@
         const list = document.getElementById("reasonsList");
         list.innerHTML = "";
         if (data.rule_reasons.length === 0) {
-          list.innerHTML = "<li>✅ Zero explicit threat signatures matched by rule patterns.</li>";
-        } else {
-          data.rule_reasons.forEach(r => {
-            const li = document.createElement("li");
-            li.innerText = r;
-            list.appendChild(li);
-          });
-        }
+      const li = document.createElement("li");
+      li.innerText = "No immediate heuristic rule violations identified.";
+      list.appendChild(li);
+    } else {
+      data.rule_reasons.forEach(reason => {
+        const li = document.createElement("li");
+        li.innerText = reason;
+        list.appendChild(li);
+      });
+    }
+
+    // Push Gemini's text analysis into your Deep Model card
+    if (data.analysis) {
+      document.getElementById("aiAnalysis").innerText = data.analysis;
+    } else {
+      document.getElementById("aiAnalysis").innerText = "No deep intelligence signatures returned.";
+    }
+
+    // Reveal the results panel and unlock the interface
+    document.getElementById("results").classList.remove("hidden");
+    btn.disabled = false;
+    clearBtn.disabled = false;
+    emailInput.disabled = false;
+    btnText.innerText = "Analyze Email";
+
+  } catch (error) {
+    alert("An error occurred during communication sequences with the core engine.");
+    console.error(error);
+    
+    // Safety fallback to restore your button state if the server fails
+    document.getElementById("loading").classList.add("hidden");
+    btn.disabled = false;
+    clearBtn.disabled = false;
+    emailInput.disabled = false;
+    btnText.innerText = "Analyze Email";
+  }
+}
+
 
         document.getElementById("aiAnalysis").innerText = data.ai_analysis;
         document.getElementById("results").classList.remove("hidden");
